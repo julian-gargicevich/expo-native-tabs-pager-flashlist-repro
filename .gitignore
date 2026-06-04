@@ -1,0 +1,5 @@
+.expo/
+.yarn/install-state.gz
+android/
+ios/
+node_modules/
