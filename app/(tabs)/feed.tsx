@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
     color: "white"
   },
   pager: {
-    backgroundColor: "blue",
     flex: 1
   },
   page: {
