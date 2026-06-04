@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Native Tabs Pager Repro",
+    "slug": "expo-native-tabs-pager-flashlist-repro",
+    "scheme": "native-tabs-pager-repro",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "dev.repro.native-tabs-pager"
+    },
+    "android": {
+      "package": "dev.repro.nativetabspager"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
