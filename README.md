@@ -1,10 +1,10 @@
-# Expo NativeTabs + PagerView + FlashList inset reproduction
+# Expo NativeTabs + PagerView + nested FlatList inset reproduction
 
 This is a minimal reproduction for a layout/inset issue with:
 
 - `expo-router/unstable-native-tabs`
 - `@expo/ui/community/pager-view`
-- a vertically scrolling `FlashList` nested inside a pager page
+- a vertically scrolling `FlatList` nested inside a pager page
 
 ## Problem
 
@@ -14,10 +14,10 @@ When a native tab screen contains:
 NativeTabs.Screen
   -> PagerView
       -> page View
-          -> FlashList
+          -> FlatList
 ```
 
-the nested vertical `FlashList` does not appear to receive/apply the same bottom
+the nested vertical `FlatList` does not appear to receive/apply the same bottom
 native tab inset behavior as a root vertical `ScrollView`.
 
 The result is that feed content/background can appear visually cut by the native
@@ -27,13 +27,13 @@ tab bar area on iOS, while a similar screen where the root scroll owner is a
 ## Screens in this repro
 
 - `Feed`: failing shape. `PagerView` fills the screen and each pager page owns a
-  vertical `FlashList`.
+  vertical `FlatList`.
 - `Search`: working comparison. The root screen owns a vertical `ScrollView`,
   and `PagerView` is given a measured height inside that scroll view.
 
 ## Expected behavior
 
-The nested `FlashList` in `Feed` should extend/adjust correctly with the native
+The nested `FlatList` in `Feed` should extend/adjust correctly with the native
 tab bar, matching the behavior of the root `ScrollView` in `Search`.
 
 ## Actual behavior
@@ -55,7 +55,7 @@ That makes this hierarchy likely relevant:
 NativeTabs automatic inset handling
   -> @expo/ui PagerView horizontal SwiftUI ScrollView
       -> RN hosted page
-          -> FlashList vertical scroll view
+          -> FlatList vertical scroll view
 ```
 
 The nested vertical scroll view may be too deep behind the pager layer for the
@@ -93,4 +93,3 @@ The versions mirror the app where the issue was observed:
 - Expo Router 56.2.6
 - `@expo/ui` 56.0.13
 - `react-native-screens` 4.25.2
-- `@shopify/flash-list` 2.0.2

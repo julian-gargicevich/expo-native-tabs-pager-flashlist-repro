@@ -1,7 +1,6 @@
 import PagerView from "@expo/ui/community/pager-view";
-import { FlashList } from "@shopify/flash-list";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 type FeedItem = {
   id: number;
@@ -13,7 +12,7 @@ const ITEMS: FeedItem[] = Array.from({ length: 40 }, (_, index) => ({
   title: `Feed item ${index + 1}`
 }));
 
-const PAGES = ["Friends", "Only you"] as const;
+const PAGES = ["FlatList", "View"] as const;
 
 export default function FeedScreen() {
   const [selectedPage, setSelectedPage] = useState(0);
@@ -23,7 +22,8 @@ export default function FeedScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Feed</Text>
         <Text style={styles.description}>
-          Failing case: the vertical FlashList is nested inside PagerView.
+          Compare a nested FlatList page with a plain View page inside the same
+          PagerView.
         </Text>
       </View>
 
@@ -55,25 +55,37 @@ export default function FeedScreen() {
         }
         style={styles.pager}
       >
-        {PAGES.map((page) => (
-          <View key={page} style={styles.page}>
-            <FlashList
-              data={ITEMS}
-              contentInsetAdjustmentBehavior="automatic"
-              contentContainerStyle={styles.feedContent}
-              keyExtractor={(item) => String(item.id)}
-              renderItem={({ item }) => (
-                <View style={styles.card}>
-                  <Text style={styles.cardTitle}>{item.title}</Text>
-                  <Text style={styles.cardBody}>
-                    Scroll to the bottom. The last cells/background should
-                    extend correctly behind or above the native tab bar.
-                  </Text>
-                </View>
-              )}
-            />
+        <View key="flatlist" style={styles.page}>
+          <FlatList
+            data={ITEMS}
+            contentInsetAdjustmentBehavior="automatic"
+            contentContainerStyle={styles.feedContent}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Text style={styles.cardBody}>
+                  FlatList page. Scroll to the bottom and compare how this
+                  nested vertical scroll view behaves around the native tab bar.
+                </Text>
+              </View>
+            )}
+          />
+        </View>
+
+        <View key="view" style={styles.page}>
+          <View style={styles.viewPageContent}>
+            {ITEMS.slice(0, 6).map((item) => (
+              <View key={item.id} style={styles.card}>
+                <Text style={styles.cardTitle}>View item {item.id}</Text>
+                <Text style={styles.cardBody}>
+                  Plain View page. This page does not create a nested vertical
+                  scroll view.
+                </Text>
+              </View>
+            ))}
           </View>
-        ))}
+        </View>
       </PagerView>
     </View>
   );
@@ -130,6 +142,10 @@ const styles = StyleSheet.create({
   feedContent: {
     backgroundColor: "#0f172a",
     paddingBottom: 120
+  },
+  viewPageContent: {
+    backgroundColor: "#0f172a",
+    flex: 1
   },
   card: {
     borderBottomColor: "#1e293b",
